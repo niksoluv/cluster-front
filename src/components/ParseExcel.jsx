@@ -4,14 +4,19 @@ import KMeans from './../algorithms/KMeans';
 import { Button, Form, FormCheck } from 'react-bootstrap';
 import { CartesianGrid, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import MiniBatchKMeans from '../algorithms/MiniBatchKMeans';
+import HClust from '../algorithms/HClust';
+import Tree from 'react-d3-tree';
 
 export const ParseExcel = () => {
 
   const fileReader = new DataReader()
   const [kmeans, setKmeans] = useState({})
   const [miniBatchKmeans, setMiniBatcKmeans] = useState({})
+  const [hclust, setHclust] = useState({})
+  const [inputDataLength, setInputDataLength] = useState(0)
   const [data, setData] = useState({})
   const [miniBatchData, setMiniBatchData] = useState({})
+  const [hclustData, setHclustData] = useState({})
   const [numericProperties, setNumericProperties] = useState([])
   const [numericPropertiesMarkup, setNumericPropertiesMarkup] = useState()
   const [disabled, setDisabled] = useState(false)
@@ -20,8 +25,10 @@ export const ParseExcel = () => {
 
   const handleChange = async (e) => {
     const data = await fileReader.handleFile(e)
+    setInputDataLength(data.length)
     setKmeans(new KMeans(data))
     setMiniBatcKmeans(new MiniBatchKMeans(data))
+    setHclust(new HClust(data))
     setNumericProperties(getNumericProperties(data[0]))
     setSelectedProperties([])
   }
@@ -69,8 +76,10 @@ export const ParseExcel = () => {
   const calculate = () => {
     const res = kmeans.calculate(clustersNum, selectedProperties, false)
     const miniRes = miniBatchKmeans.calculate(clustersNum, selectedProperties, false)
+    //const hclustRes = hclust.calculate(selectedProperties)
     setData(res)
     setMiniBatchData(miniRes)
+    //setHclustData(hclustRes)
   }
 
   return (
@@ -131,7 +140,10 @@ export const ParseExcel = () => {
           </ScatterChart>
         </ResponsiveContainer>
       }
-
+      {/* {hclustData?.dendogram && hclustData?.layout &&
+        <div style={{ width: '100%', height: '500px' }}>
+          <Tree data={hclustData.dendogram} pathFunc='step' nodeSize={{ y: 2,x:40 }} />
+        </div>} */}
     </div >
   )
 }
