@@ -6,6 +6,7 @@ import { CartesianGrid, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAx
 import MiniBatchKMeans from '../algorithms/MiniBatchKMeans';
 import HClust from '../algorithms/HClust';
 import Tree from 'react-d3-tree';
+import PearsonsCorr from '../algorithms/PearsonsCorr';
 
 export const ParseExcel = () => {
 
@@ -13,10 +14,12 @@ export const ParseExcel = () => {
   const [kmeans, setKmeans] = useState({})
   const [miniBatchKmeans, setMiniBatcKmeans] = useState({})
   const [hclust, setHclust] = useState({})
+  const [pearson, setPearson] = useState({})
   const [inputDataLength, setInputDataLength] = useState(0)
   const [data, setData] = useState({})
   const [miniBatchData, setMiniBatchData] = useState({})
   const [hclustData, setHclustData] = useState({})
+  const [pearsonData, setPearsonData] = useState({})
   const [numericProperties, setNumericProperties] = useState([])
   const [numericPropertiesMarkup, setNumericPropertiesMarkup] = useState()
   const [disabled, setDisabled] = useState(false)
@@ -29,6 +32,7 @@ export const ParseExcel = () => {
     setKmeans(new KMeans(data))
     setMiniBatcKmeans(new MiniBatchKMeans(data))
     setHclust(new HClust(data))
+    setPearson(new PearsonsCorr(data))
     setNumericProperties(getNumericProperties(data[0]))
     setSelectedProperties([])
   }
@@ -77,8 +81,10 @@ export const ParseExcel = () => {
     const res = kmeans.calculate(clustersNum, selectedProperties, false)
     const miniRes = miniBatchKmeans.calculate(clustersNum, selectedProperties, false)
     //const hclustRes = hclust.calculate(selectedProperties)
+    const pearsonsRes = pearson.calculate(selectedProperties, numericProperties)
     setData(res)
     setMiniBatchData(miniRes)
+    setPearsonData(pearsonsRes)
     //setHclustData(hclustRes)
   }
 
@@ -144,6 +150,10 @@ export const ParseExcel = () => {
         <div style={{ width: '100%', height: '500px' }}>
           <Tree data={hclustData.dendogram} pathFunc='step' nodeSize={{ y: 2,x:40 }} />
         </div>} */}
+      {pearsonData.correlation &&
+        <div>
+          Pearsons Corellation: {pearsonData.correlation}
+        </div>}
     </div >
   )
 }
