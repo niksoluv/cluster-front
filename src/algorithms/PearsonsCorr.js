@@ -56,25 +56,26 @@ export default class PearsonsCorr {
       for (let j = 0; j < this.numericProperties.length; j++) {
         if (i === j) {
           matrixRow.push(1)
+          console.log(`${this.numericProperties[i]}-${this.numericProperties[j]}-1`)
         }
         else {
-          matrixRow.push(this.calculateCorrelationCoefficient(propObject[this.numericProperties[i]], propObject[this.numericProperties[j]]));
+          const corr = this.calculateCorrelationCoefficient(
+            propObject[this.numericProperties[i]],
+            propObject[this.numericProperties[j]])
+          matrixRow.push(corr.toFixed(2));
+          console.log(`${this.numericProperties[i]}-${this.numericProperties[j]}-${corr}`)
         }
       }
-      matrix.push(matrixRow)
+      matrix.push({ data: matrixRow, name: this.numericProperties[i] })
     }
-    console.log(matrix)
+    return matrix
   }
 
   calculate = (selectedProps, numericProperties) => {
     this.selectedProperties = selectedProps;
     this.numericProperties = numericProperties;
-    const xData = this.getPropArrayByName(selectedProps[0]);
-    const yData = this.getPropArrayByName(selectedProps[1]);
-
-    const correlation = this.calculateCorrelationCoefficient(xData, yData);
 
     const correlationMatrix = this.calculateCorrelationMatrix()
-    return { correlation: correlation };
+    return { correlation: correlationMatrix };
   }
 }

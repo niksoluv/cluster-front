@@ -1,3 +1,4 @@
+import silhouetteScore from "@robzzson/silhouette";
 
 export default class KMeans {
   dataset
@@ -100,31 +101,31 @@ export default class KMeans {
   }
 
   compareCentroids(a, b) {
-    this.selectedProps.forEach(prop => {
-      if (a[prop] !== b[prop])
-        return false;
-    })
+    // this.selectedProps.forEach(prop => {
+    //   if (a[prop] !== b[prop])
+    //     return false;
+    // })
 
-    // if (a['Age'] === b['Age'] && a['Salary'] === b['Salary'])
-    //   return true
-
-    return true;
+    if (a[this.selectedProps[0]] === b[this.selectedProps[0]] && a[this.selectedProps[1]] === b[this.selectedProps[1]])
+      return true
+    return false
+    //return true;
   }
 
   shouldStop(oldCentroids, centroids, iterations) {
     if (iterations > this.MAX_ITERATIONS) {
       return true;
     }
-    // if (!oldCentroids || !oldCentroids.length) {
-    //   return false;
-    // }
-    // let sameCount = true;
-    // for (let i = 0; i < centroids.length; i++) {
-    //   if (!this.compareCentroids(centroids[i], oldCentroids[i])) {
-    //     sameCount = false;
-    //   }
-    // }
-    // return sameCount;
+    if (!oldCentroids || !oldCentroids.length) {
+      return false;
+    }
+    let sameCount = true;
+    for (let i = 0; i < centroids.length; i++) {
+      if (!this.compareCentroids(centroids[i], oldCentroids[i])) {
+        sameCount = false;
+      }
+    }
+    return sameCount;
   }
 
   // Returns a label for each piece of data in the dataset. 
@@ -240,6 +241,19 @@ export default class KMeans {
       };
       const end = performance.now();
       console.log(`K-Means: ${end - start} ms`);
+      const data = [
+        [-9.67867, -4.20271],
+        [0.08525, 3.64528],
+        [-7.38729, -8.53728],
+        [-5.93111, -9.25311],
+        [-8.5356, -6.01348],
+        [-2.18773, 3.33352],
+        [-0.79415, 2.10495],
+      ];
+      const l = [1, 0, 2, 2, 1, 0, 0];
+
+      let score = silhouetteScore(data, l);
+      console.log(score);
       return results
     } else {
       throw new Error('Invalid dataset');

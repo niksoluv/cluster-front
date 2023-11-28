@@ -103,31 +103,34 @@ export default class MiniBatchKMeans {
   }
 
   compareCentroids(a, b) {
-    this.selectedProps.forEach(prop => {
-      if (a[prop] !== b[prop])
-        return false;
-    })
+    // this.selectedProps.forEach(prop => {
+    //   if (a[prop] !== b[prop])
+    //     return false;
+    // })
 
-    // if (a['Age'] === b['Age'] && a['Salary'] === b['Salary'])
-    //   return true
+    // // if (a['Age'] === b['Age'] && a['Salary'] === b['Salary'])
+    // //   return true
 
-    return true;
+    // return true;
+    if (a[this.selectedProps[0]] === b[this.selectedProps[0]] && a[this.selectedProps[1]] === b[this.selectedProps[1]])
+      return true
+    return false
   }
 
   shouldStop(oldCentroids, centroids, iterations) {
     if (iterations > this.MAX_ITERATIONS) {
       return true;
     }
-    // if (!oldCentroids || !oldCentroids.length) {
-    //   return false;
-    // }
-    // let sameCount = true;
-    // for (let i = 0; i < centroids.length; i++) {
-    //   if (!this.compareCentroids(centroids[i], oldCentroids[i])) {
-    //     sameCount = false;
-    //   }
-    // }
-    // return sameCount;
+    if (!oldCentroids || !oldCentroids.length) {
+      return false;
+    }
+    let sameCount = true;
+    for (let i = 0; i < centroids.length; i++) {
+      if (!this.compareCentroids(centroids[i], oldCentroids[i])) {
+        sameCount = false;
+      }
+    }
+    return sameCount;
   }
 
   // Returns a label for each piece of data in the dataset. 

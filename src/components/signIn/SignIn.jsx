@@ -10,7 +10,7 @@ const SignIn = (props) => {
   const userInfo = useSelector((state) => {
     return state.user
   })
-  console.log(userInfo)
+  //console.log(userInfo)
   const userData = {}
 
   const handleChange = (e, fieldName) => {
@@ -19,7 +19,7 @@ const SignIn = (props) => {
 
   const signIn = () => {
     UserAPI.logIn(userData).then(res => {
-      console.log(res)
+      //console.log(res)
       localStorage.setItem('token', res.token.access_token)
       dispatch(loginAction(res))
     })

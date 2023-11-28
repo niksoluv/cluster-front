@@ -16,6 +16,7 @@ export default class HClust {
   }
   getDendogramDataWithLabels(data) {
     if (data.children.length !== 0) {
+      data.name = "test"// make avg label by childrens
       this.getDendogramDataWithLabels(data.children[0])
       this.getDendogramDataWithLabels(data.children[1])
     }
@@ -27,8 +28,10 @@ export default class HClust {
     this.selectedProps = selectedProps
     const features = this.dataset.map(point => [point[selectedProps[0]], point[selectedProps[1]]])
 
-    const dendrogramData = agnes(features);
-
+    const dendrogramData = agnes(features, {
+      method: 'ward',
+    });
+    const clusters = dendrogramData.cut(1500)
     const layout = {
       title: 'Hierarchical Clustering Dendrogram',
       xaxis: { title: selectedProps[0] },
@@ -39,7 +42,6 @@ export default class HClust {
       separation: { siblings: 1, nonSiblings: 2 },
     };
     const dataWithLabels = this.getDendogramDataWithLabels(dendrogramData)
-    console.log(dataWithLabels);
     return {
       dendogram: dendrogramData,
       layout: layout,
