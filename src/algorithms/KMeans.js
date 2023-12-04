@@ -62,7 +62,9 @@ export default class KMeans {
 
   getPointsMean(pointList) {
     const totalPoints = pointList.length;
-    const result = { Age: 0, Salary: 0 };
+    const result = {};
+    result[this.selectedProps[0]] = 0
+    result[this.selectedProps[1]] = 0
     this.selectedProps.forEach(prop => {
       for (let i = 0; i < pointList.length; i++) {
         const point = pointList[i];
@@ -167,13 +169,12 @@ export default class KMeans {
 
   calcMeanCentroid(dataSet, start, end) {
     const n = end - start;
-    let mean = {
-      'Age': 0,
-      'Salary': 0,
-    };
+    let mean = {};
+    mean[this.selectedProps[0]] = 0
+    mean[this.selectedProps[1]] = 0
     for (let i = start; i < end; i++) {
-      mean['Age'] += mean['Age'] + dataSet[i]['Age'] / n;
-      mean['Salary'] += mean['Salary'] + dataSet[i]['Salary'] / n;
+      mean[this.selectedProps[0]] += mean[this.selectedProps[0]] + dataSet[i][this.selectedProps[0]] / n;
+      mean[this.selectedProps[1]] += mean[this.selectedProps[1]] + dataSet[i][this.selectedProps[1]] / n;
     }
     return mean;
   }
@@ -241,19 +242,19 @@ export default class KMeans {
       };
       const end = performance.now();
       console.log(`K-Means: ${end - start} ms`);
-      const data = [
-        [-9.67867, -4.20271],
-        [0.08525, 3.64528],
-        [-7.38729, -8.53728],
-        [-5.93111, -9.25311],
-        [-8.5356, -6.01348],
-        [-2.18773, 3.33352],
-        [-0.79415, 2.10495],
-      ];
-      const l = [1, 0, 2, 2, 1, 0, 0];
+      // const data = [
+      //   [-9.67867, -4.20271],
+      //   [0.08525, 3.64528],
+      //   [-7.38729, -8.53728],
+      //   [-5.93111, -9.25311],
+      //   [-8.5356, -6.01348],
+      //   [-2.18773, 3.33352],
+      //   [-0.79415, 2.10495],
+      // ];
+      // const l = [1, 0, 2, 2, 1, 0, 0];
 
-      let score = silhouetteScore(data, l);
-      console.log(score);
+      // let score = silhouetteScore(data, l);
+      // console.log(score);
       return results
     } else {
       throw new Error('Invalid dataset');

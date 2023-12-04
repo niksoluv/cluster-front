@@ -64,7 +64,9 @@ export default class MiniBatchKMeans {
 
   getPointsMean(pointList) {
     const totalPoints = pointList.length;
-    const result = { Age: 0, Salary: 0 };
+    const result = {};
+    result[this.selectedProps[0]] = 0
+    result[this.selectedProps[1]] = 0
     this.selectedProps.forEach(prop => {
       for (let i = 0; i < pointList.length; i++) {
         const point = pointList[i];
@@ -172,13 +174,12 @@ export default class MiniBatchKMeans {
 
   calcMeanCentroid(dataSet, start, end) {
     const n = end - start;
-    let mean = {
-      'Age': 0,
-      'Salary': 0,
-    };
+    let mean = {};
+    mean[this.selectedProps[0]] = 0
+    mean[this.selectedProps[1]] = 0
     for (let i = start; i < end; i++) {
-      mean['Age'] += mean['Age'] + dataSet[i]['Age'] / n;
-      mean['Salary'] += mean['Salary'] + dataSet[i]['Salary'] / n;
+      mean[this.selectedProps[0]] += mean[this.selectedProps[0]] + dataSet[i][this.selectedProps[0]] / n;
+      mean[this.selectedProps[1]] += mean[this.selectedProps[1]] + dataSet[i][this.selectedProps[1]] / n;
     }
     return mean;
   }
@@ -212,8 +213,8 @@ export default class MiniBatchKMeans {
   calculate(k, selectedProps, useNaiveSharding = true) {
     this.k = k
     this.numOfBatches = k
-    if(this.dataset.length>1000){
-      this.numOfBatches=this.dataset.length/100
+    if (this.dataset.length > 1000) {
+      this.numOfBatches = this.dataset.length / 100
     }
     this.batches = []
     this.batchSize = (this.dataset.length / this.numOfBatches).toFixed(0)

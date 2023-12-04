@@ -1,40 +1,30 @@
 export default class PearsonsCorr {
   data = []
-  selectedProperties = []
   numericProperties = []
 
   constructor(data) {
     this.data = data
   }
-  // Function to calculate the mean of an array
   calculateMean = (array) => {
     return array.reduce((sum, value) => sum + value, 0) / array.length;
   }
 
-  // Function to calculate the correlation coefficient
-  calculateCorrelationCoefficient = (xArray, yArray) => {
-    if (xArray.length !== yArray.length) {
-      throw new Error("Arrays must have the same length");
-    }
+  calculateCorrelationCoefficient = (xArr, yArr) => {
+    const n = xArr.length;
 
-    const n = xArray.length;
+    const meanX = this.calculateMean(xArr);
+    const meanY = this.calculateMean(yArr);
 
-    // Calculate the means
-    const meanX = this.calculateMean(xArray);
-    const meanY = this.calculateMean(yArray);
-
-    // Calculate the numerator and denominators for the correlation coefficient formula
     let numerator = 0;
     let denominatorX = 0;
     let denominatorY = 0;
 
     for (let i = 0; i < n; i++) {
-      numerator += (xArray[i] - meanX) * (yArray[i] - meanY);
-      denominatorX += Math.pow(xArray[i] - meanX, 2);
-      denominatorY += Math.pow(yArray[i] - meanY, 2);
+      numerator += (xArr[i] - meanX) * (yArr[i] - meanY);
+      denominatorX += Math.pow(xArr[i] - meanX, 2);
+      denominatorY += Math.pow(yArr[i] - meanY, 2);
     }
 
-    // Calculate the correlation coefficient
     const correlationCoefficient = numerator / Math.sqrt(denominatorX * denominatorY);
 
     return correlationCoefficient;
@@ -56,14 +46,15 @@ export default class PearsonsCorr {
       for (let j = 0; j < this.numericProperties.length; j++) {
         if (i === j) {
           matrixRow.push(1)
-          console.log(`${this.numericProperties[i]}-${this.numericProperties[j]}-1`)
         }
         else {
-          const corr = this.calculateCorrelationCoefficient(
+          let corr = this.calculateCorrelationCoefficient(
             propObject[this.numericProperties[i]],
             propObject[this.numericProperties[j]])
+          if (isNaN(corr)) {
+            corr = 0
+          }
           matrixRow.push(corr.toFixed(2));
-          console.log(`${this.numericProperties[i]}-${this.numericProperties[j]}-${corr}`)
         }
       }
       matrix.push({ data: matrixRow, name: this.numericProperties[i] })
@@ -72,7 +63,6 @@ export default class PearsonsCorr {
   }
 
   calculate = (selectedProps, numericProperties) => {
-    this.selectedProperties = selectedProps;
     this.numericProperties = numericProperties;
 
     const correlationMatrix = this.calculateCorrelationMatrix()

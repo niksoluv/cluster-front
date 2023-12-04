@@ -15,8 +15,7 @@ export default class DataReader {
     const worksheet = workbook.Sheets[workbook.SheetNames[0]]
     const jsonData = XLSX.utils.sheet_to_json(worksheet)
     this.jsonData = jsonData
-    //console.log(jsonData)
-    return this.jsonData
+    return this.jsonData//.slice(0,10000)
   }
 
   readData = async (e) => {
