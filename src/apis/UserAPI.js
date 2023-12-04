@@ -3,7 +3,7 @@ import { defineCancelApiObject } from "./configs/axiosUtils"
 
 export const UserAPI = {
   logIn: async (user, cancel = false) => {
-    const response = await api.post("/users/login", user)
+    const response = await api.post("/Users/login", user)
     return response.data
   },
   register: async (user, cancel = false) => {

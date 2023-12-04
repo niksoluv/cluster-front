@@ -31,7 +31,7 @@ const Header = () => {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container fluid>
-        <Navbar.Brand href="/">User Clustering</Navbar.Brand>
+        <Navbar.Brand><Link className={styles.link} to='/'>User Clustering</Link></Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -39,8 +39,7 @@ const Header = () => {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Item><Link className={styles.link} to='/parse-excel'>Parser</Link></Nav.Item>
-            <Nav.Link href="#action2">Link</Nav.Link>
+            <Nav.Link><Link className={styles.link} to='/parse-excel'>Parser</Link></Nav.Link>
             <NavDropdown title="Link" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action4">

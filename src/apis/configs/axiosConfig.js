@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export const api = axios.create({
-  baseURL: "https://localhost:44376/api",
+  baseURL: "https://localhost:44327/api",
 })
 
 // defining a custom error handler for all APIs

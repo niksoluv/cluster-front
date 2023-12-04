@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import { ToastContainer } from 'react-toastify';
-import { ParseExcel } from './components/ParseExcel';
+import { ParseExcel } from './components/body/ParseExcel';
 
 const store = createStore(rootReducer)
 
