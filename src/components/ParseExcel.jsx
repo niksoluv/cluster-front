@@ -87,7 +87,7 @@ export const ParseExcel = () => {
     const pearsonsRes = pearson.calculate(selectedProperties, numericProperties)
     setData(res)
     setMiniBatchData(miniRes)
-    setPearsonData(pearsonsRes)
+    //setPearsonData(pearsonsRes)
     //setHclustData(hclustRes)
   }
 
@@ -119,7 +119,7 @@ export const ParseExcel = () => {
               <YAxis type="number" dataKey={selectedProperties[1]} name={selectedProperties[1]} />
               <Tooltip cursor={{ strokeDasharray: '3 3' }} />
               {data.clusters.map((cluster) => {
-                return <Scatter isAnimationActive={false} name="A school" data={cluster.points} fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`} />
+                return <Scatter isAnimationActive={false} name="A school" data={cluster.points.slice(0,15)} fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`} />
               })}
               {data.centroids.map((centroid) => {
                 return <Scatter name="A school" data={[centroid]} fill="#FF0000" shape='diamond' />
@@ -142,7 +142,7 @@ export const ParseExcel = () => {
               <YAxis type="number" dataKey={selectedProperties[1]} name={selectedProperties[1]} />
               <Tooltip cursor={{ strokeDasharray: '3 3' }} />
               {miniBatchData.clusters.map((cluster) => {
-                return <Scatter isAnimationActive={false} name="A school" data={cluster.points} fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`} />
+                return <Scatter isAnimationActive={false} name="A school" data={cluster.points.slice(0,15)} fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`} />
               })}
               {miniBatchData.centroids.map((centroid) => {
                 return <Scatter name="A school" data={[centroid]} fill="#FF0000" shape='diamond' />
@@ -156,8 +156,8 @@ export const ParseExcel = () => {
           <div style={{ width: '50%', height: '500px' }}>
             <Tree data={hclustData.dendogram} pathFunc='step' />
           </div>} */}
-        {pearsonData.correlation &&
-          <CorrelationHeatmap state={{ data: pearsonData.correlation, numericProperties: numericProperties }} />}
+        {/* {pearsonData.correlation &&
+          <CorrelationHeatmap state={{ data: pearsonData.correlation, numericProperties: numericProperties }} />} */}
       </div>
     </div >
   )
