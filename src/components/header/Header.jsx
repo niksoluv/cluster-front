@@ -14,13 +14,17 @@ import styles from './Header.module.css'
 
 const Header = () => {
   const dispatch = useDispatch()
+  const userData = useSelector((state => {
+    return state?.user?.user
+  }))
   const userInfo = useSelector((state) => {
     return state.user
   })
   useEffect(() => {
     if (localStorage.getItem("token")) {
       UserAPI.getInfo().then(res => {
-        dispatch(getDataAction(res))
+        if (res)
+          dispatch(getDataAction(res))
       })
     }
   }, [])
@@ -56,7 +60,7 @@ const Header = () => {
           </Nav>
           {userInfo?.token !== "" ?
             <>
-              <Link to='/profile' className='m-1'>Profile</Link>
+              <Link to='/profile' className='m-1'>{userData.userName}</Link>
               <Button
                 onClick={() => signOut()}>Sign Out</Button>
             </>

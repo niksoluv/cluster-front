@@ -13,14 +13,19 @@ export const UserAPI = {
     return response.data
   },
   getInfo: async (cancel = false) => {
-    const response = await api.get("/users/info", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    })
+    try {
+      const response = await api.get("/users/info", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
 
-    // returning the product returned by the API
-    return response.data
+      // returning the product returned by the API
+      return response.data
+    }
+    catch (err) {
+      console.log(err)
+    }
   },
 }
 

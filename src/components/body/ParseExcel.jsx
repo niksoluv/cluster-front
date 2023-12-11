@@ -8,9 +8,12 @@ import PearsonsCorr from '../../algorithms/PearsonsCorr';
 import CorrelationHeatmap from './heatmap/CorrelationHeatmap';
 import KMeansComponent from './kmeans/KMeansComponent';
 import HClustComponent from './hierarchical/HClustComponent';
+import { useSelector } from 'react-redux';
+import { ResultsAPI } from '../../apis/ResultsAPI';
 
 export const ParseExcel = () => {
 
+  console.log("render")
   const fileReader = new DataReader()
   const [kmeans, setKmeans] = useState({})
   const [miniBatchKmeans, setMiniBatcKmeans] = useState({})
@@ -25,6 +28,10 @@ export const ParseExcel = () => {
   const [disabled, setDisabled] = useState(false)
   const [selectedProperties, setSelectedProperties] = useState([])
   const [clustersNum, setClustersNum] = useState(3)
+
+  const userData = useSelector((state)=>{
+    return state.user.user
+  })
 
   const handleChange = async (e) => {
     const data = await fileReader.handleFile(e)
@@ -60,7 +67,7 @@ export const ParseExcel = () => {
         id={`inline-${prop}-1`} />
     })
     setNumericPropertiesMarkup(markup)
-  }, [numericProperties, selectedProperties])
+  }, [selectedProperties])
 
   useEffect(() => {
     setDisabled(selectedProperties.length !== 2)
@@ -88,6 +95,18 @@ export const ParseExcel = () => {
     setHclustData(hclustRes)
   }
 
+  const saveResults = () => {
+    const resultData = {
+      kmeans: data,
+      hclust: hclustData,
+      pearson: pearsonData
+    }
+    ResultsAPI.saveData(resultData, userData).then(res => {
+      if (res)
+        console.log(res)
+    })
+  }
+
   return (
     <Container>
       <h1>User Data Clusterization</h1>
@@ -104,9 +123,9 @@ export const ParseExcel = () => {
         {data?.centroids &&
           <KMeansComponent state={{ data: data, selectedProperties: selectedProperties }} />
         }
-        {miniBatchData?.centroids &&
+        {/* {miniBatchData?.centroids &&
           <KMeansComponent state={{ data: miniBatchData, selectedProperties: selectedProperties }} />
-        }
+        } */}
       </div>
       <div style={{ display: 'flex' }}>
         {hclustData?.dendogram && hclustData?.layout &&
@@ -115,6 +134,8 @@ export const ParseExcel = () => {
         {/* {pearsonData.correlation &&
           <CorrelationHeatmap state={{ data: pearsonData.correlation, numericProperties: numericProperties }} />} */}
       </div>
+      {data.clusters &&
+        <Button onClick={() => saveResults()}>Save Results</Button>}
     </Container >
   )
 }

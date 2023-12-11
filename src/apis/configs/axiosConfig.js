@@ -18,6 +18,6 @@ const errorHandler = (error) => {
 
 // registering the custom error handler to the
 // "api" axios instance
-api.interceptors.response.use(undefined, (error) => {
-  return errorHandler(error)
-})
+// api.interceptors.response.use(undefined, (error) => {
+//   return errorHandler(error)
+// })
