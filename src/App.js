@@ -16,6 +16,7 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import { ToastContainer } from 'react-toastify';
 import { ParseExcel } from './components/body/ParseExcel';
+import { HistoryComponent } from './components/body/history/HistoryComponent';
 
 const store = createStore(rootReducer)
 
@@ -28,6 +29,7 @@ function App() {
           <Route path='/login' element={<SignIn />} />
           <Route path='/register' element={<SignUp />} />
           <Route path='/parse-excel' element={<ParseExcel />} />
+          <Route path='/history' element={<HistoryComponent />} />
           <Route path='/' element={<Root />} />
         </Routes>
       </BrowserRouter>

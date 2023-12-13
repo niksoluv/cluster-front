@@ -1,10 +1,18 @@
 import { api } from "./configs/axiosConfig"
-import { defineCancelApiObject } from "./configs/axiosUtils"
+//import { defineCancelApiObject } from "./configs/axiosUtils"
 
 export const UserAPI = {
   logIn: async (user, cancel = false) => {
-    const response = await api.post("/Users/login", user)
-    return response.data
+    try {
+      const response = await api.post("/Users/login", user)
+      return response.data
+    }
+    catch (err) {
+      return {
+        error: err,
+        errorMessage: "Wrong username or password"
+      }
+    }
   },
   register: async (user, cancel = false) => {
     const response = await api.post("/users/register", user)
@@ -30,4 +38,4 @@ export const UserAPI = {
 }
 
 // defining the cancel API object for ProductAPI
-const cancelApiObject = defineCancelApiObject(UserAPI)
+//const cancelApiObject = defineCancelApiObject(UserAPI)

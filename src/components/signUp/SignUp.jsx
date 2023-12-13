@@ -1,14 +1,17 @@
 import React from 'react';
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate } from "react-router-dom"
 import { UserAPI } from './../../apis/UserAPI';
 import { toast } from "react-toastify";
 import { Container } from 'react-bootstrap';
+import { registerAction } from '../../redux/reducers/userReducer';
 
 const SignUp = (props) => {
   const [userData, setUserData] = useState({})
   const [errors, setErrors] = useState({})
+
+  const dispatch = useDispatch()
 
   const userInfo = useSelector((state) => {
     return state.user
@@ -94,25 +97,16 @@ const SignUp = (props) => {
           notify(res)
           return
         }
+        else {
+          notify("Register successfull")
+          localStorage.setItem('token', res.token.access_token)
+          dispatch(registerAction(res))
+        }
       })
-      // register(userData).then(res => {
-      // 	if (res.errorMessage !== undefined) {
-      // 		notify(res.errorMessage)
-      // 		return
-      // 	}
-      // 	getToken(res).then(res => {
-      // 		getUserData(res.access_token).then(res => {
-      // 			const payload = {
-      // 				userData: res
-      // 			}
-      // 			dispatch(getDataAction(payload))
-      // 		})
-      // 	})
-      // })
     }
   }
   if (userInfo) {
-    if (userInfo?.id) {
+    if (userInfo?.token) {
       return <Navigate to='/' />
     }
   }
@@ -139,7 +133,7 @@ const SignUp = (props) => {
       <div className="form-group">
         <label>Email address</label>
         <input
-          type="text"
+          type="email"
           className="form-control"
           id="email"
           name="EmailInput"
@@ -183,102 +177,6 @@ const SignUp = (props) => {
         Sign Up
       </button>
     </Container>
-    // </div>
-    // <div className="d-flex flex-column align-items-center">
-    //   <h3 className="d-flex align-items-center justify-content-center">Sign Up</h3>
-    //   <Form style={{ width: '20rem', paddingTop: '2rem' }} onSubmit={handleSubmit}>
-    //     <Form.Group style={{ display: "flex", flexDirection: 'column' }}>
-    //       <Form.Label>Username</Form.Label>
-    //       <InputGroup hasValidation>
-    //         <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-    //         <Form.Control
-    //           type="text"
-    //           placeholder="Username"
-    //           aria-describedby="inputGroupPrepend"
-    //           value={userData.username}
-    //           onChange={(e) => handleChange(e, 'username')}
-    //           required
-    //         />
-    //         <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
-    //       </InputGroup>
-
-    //       <Form.Label>E-mail</Form.Label>
-    //       <Form.Control
-    //         type="email"
-    //         placeholder="E-mail"
-    //         value={userData.email}
-    //         onChange={(e) => handleChange(e, 'email')}
-    //         required
-    //       />
-    //       <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
-
-    //       <Form.Label>Password</Form.Label>
-    //       <Form.Control
-    //         type="password"
-    //         placeholder="Password"
-    //         value={userData.password}
-    //         onChange={(e) => handleChange(e, 'password')}
-    //         required
-    //       />
-    //       <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
-
-    //       <Form.Label>Submit Password</Form.Label>
-    //       <Form.Control
-    //         type="password"
-    //         placeholder="Submit Password"
-    //         value={userData.submitPassword}
-    //         onChange={(e) => handleChange(e, 'submitPassword')}
-    //         required
-    //       />
-    //       <Form.Control.Feedback type="invalid">{errors.submitPassword}</Form.Control.Feedback>
-    //       <Button type="submit" className="mt-2">Sign Up</Button>
-    //     </Form.Group>
-    //     {/* <div className="mb-3">
-    //       <label>Username</label>
-    //       <input
-    //         type="text"
-    //         className="form-control"
-    //         placeholder="Enter username"
-    //         onChange={(e) => handleChange(e, 'username')}
-    //       />
-    //     </div>
-    //     <div className="mb-3">
-    //       <label>E-mail</label>
-    //       <input
-    //         type="email"
-    //         className="form-control"
-    //         placeholder="Enter email"
-    //         onChange={(e) => handleChange(e, 'email')}
-    //       />
-    //     </div>
-    //     <div className="mb-3">
-    //       <label>Password</label>
-    //       <input
-    //         type="password"
-    //         className="form-control"
-    //         placeholder="Enter password"
-    //         onChange={(e) => handleChange(e, 'password')}
-    //       />
-    //     </div>
-    //     <div className="mb-3">
-    //       <label>Submit password</label>
-    //       <input
-    //         type="password"
-    //         className="form-control"
-    //         placeholder="Submit password"
-    //         onChange={(e) => handleChange(e, 'password')}
-    //       />
-    //     </div>
-    //     <div className="d-grid">
-    //       <button type="submit" className="btn btn-primary" onClick={() => signUp()}>
-    //         Sign Up
-    //       </button>
-    //     </div> */}
-    //     <p className="forgot-password text-right">
-    //       Already have an account? <Link to='/login'>Sign In</Link>
-    //     </p>
-    //   </Form>
-    // </div>
   )
 }
 

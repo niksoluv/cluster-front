@@ -3,6 +3,7 @@ import { Link, Navigate } from "react-router-dom"
 import { UserAPI } from "../../apis/UserAPI"
 import { useDispatch, useSelector } from "react-redux";
 import { loginAction } from "../../redux/reducers/userReducer";
+import { toast } from "react-toastify";
 
 const SignIn = (props) => {
 
@@ -16,12 +17,20 @@ const SignIn = (props) => {
   const handleChange = (e, fieldName) => {
     userData[fieldName] = e.target.value
   }
-
   const signIn = () => {
     UserAPI.logIn(userData).then(res => {
+      if (res.error) {
+        console.log(res)
+        if (res.error.response.status === 401){
+          toast.error(res.errorMessage);
+        }
+      }
+      else {
+        toast.success("Successfull login")
+        localStorage.setItem('token', res.token.access_token)
+        dispatch(loginAction(res))
+      }
       //console.log(res)
-      localStorage.setItem('token', res.token.access_token)
-      dispatch(loginAction(res))
     })
   }
   if (userInfo?.token !== '') {

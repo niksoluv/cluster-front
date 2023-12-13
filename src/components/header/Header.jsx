@@ -44,6 +44,9 @@ const Header = () => {
             navbarScroll
           >
             <Nav.Link><Link className={styles.link} to='/parse-excel'>Parser</Link></Nav.Link>
+            {userInfo.token &&
+              <Nav.Link><Link className={styles.link} to='/history'>History</Link></Nav.Link>
+            }
             <NavDropdown title="Link" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action4">
