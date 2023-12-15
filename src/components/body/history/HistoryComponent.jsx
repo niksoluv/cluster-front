@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { ResultsAPI } from "../../../apis/ResultsAPI"
 import { toast } from "react-toastify"
 import { getHistoryDataAction } from "../../../redux/reducers/userReducer"
+import { HistoryElement } from "./HistoryElement"
 
 export const HistoryComponent = (props) => {
 
@@ -29,12 +30,16 @@ export const HistoryComponent = (props) => {
     })
   }, [])
 
+  const historyMarkup = history.map(h => {
+    return <HistoryElement state={{ data: h }} />
+  })
   // history.forEach(h => h.data = JSON.parse(h.data))
   // console.log(history)
 
   return (
-    <Container>
-      {JSON.stringify(history)}
+    <Container style={{ display: 'flex', flexWrap:'wrap'}}>
+      {historyMarkup}
+      {/* {JSON.stringify(history)} */}
     </Container>
   )
 } 

@@ -10,16 +10,19 @@ import KMeansComponent from './kmeans/KMeansComponent';
 import HClustComponent from './hierarchical/HClustComponent';
 import { useSelector } from 'react-redux';
 import { ResultsAPI } from '../../apis/ResultsAPI';
+import { toast } from 'react-toastify';
 
 export const ParseExcel = () => {
 
-  console.log("render")
   const fileReader = new DataReader()
+  const [filename, setFilename] = useState('')
+
   const [kmeans, setKmeans] = useState({})
   const [miniBatchKmeans, setMiniBatcKmeans] = useState({})
   const [hclust, setHclust] = useState({})
   const [pearson, setPearson] = useState({})
   const [data, setData] = useState({})
+  const [dataLength, setDataLength] = useState({})
   const [miniBatchData, setMiniBatchData] = useState({})
   const [hclustData, setHclustData] = useState({})
   const [pearsonData, setPearsonData] = useState({})
@@ -29,12 +32,14 @@ export const ParseExcel = () => {
   const [selectedProperties, setSelectedProperties] = useState([])
   const [clustersNum, setClustersNum] = useState(3)
 
-  const userData = useSelector((state)=>{
+  const userData = useSelector((state) => {
     return state.user.user
   })
 
   const handleChange = async (e) => {
+    setFilename(e.target.files[0].name)
     const data = await fileReader.handleFile(e)
+    setDataLength(data.length)
     setKmeans(new KMeans(data))
     setMiniBatcKmeans(new MiniBatchKMeans(data))
     setHclust(new HClust(data))
@@ -85,26 +90,42 @@ export const ParseExcel = () => {
   }
 
   const calculate = () => {
-    const res = kmeans.calculate(clustersNum, selectedProperties, true)
-    const miniRes = miniBatchKmeans.calculate(clustersNum, selectedProperties, true)
+    let res = {};
+    if (dataLength > 1000 || clustersNum > 5) {
+      res = miniBatchKmeans.calculate(clustersNum, selectedProperties, true)
+    }
+    else {
+      res = kmeans.calculate(clustersNum, selectedProperties, true)
+    }
+    //const miniRes = miniBatchKmeans.calculate(clustersNum, selectedProperties, true)
     const hclustRes = hclust.calculate(selectedProperties)
     const pearsonsRes = pearson.calculate(selectedProperties, numericProperties)
     setData(res)
-    setMiniBatchData(miniRes)
-    //setPearsonData(pearsonsRes)
+    //setMiniBatchData(miniRes)
     setHclustData(hclustRes)
+    setPearsonData(pearsonsRes)
   }
 
   const saveResults = () => {
-    const resultData = {
-      kmeans: data,
-      hclust: hclustData,
-      pearson: pearsonData
+    try {
+      const resultData = {
+        kmeans: data,
+        hclust: hclustData,
+        pearson: pearsonData,
+        selectedProperties: selectedProperties,
+        numericProperties: numericProperties,
+      }
+      ResultsAPI.saveData(resultData, filename, userData).then(res => {
+        if (res) {
+          console.log(res)
+          toast.success("Results saved successfully")
+        }
+      })
     }
-    ResultsAPI.saveData(resultData, userData).then(res => {
-      if (res)
-        console.log(res)
-    })
+    catch (err) {
+      console.log(err)
+      toast.error("Some error occured")
+    }
   }
 
   return (
@@ -131,8 +152,8 @@ export const ParseExcel = () => {
         {hclustData?.dendogram && hclustData?.layout &&
           <HClustComponent state={{ data: hclustData }} />
         }
-        {/* {pearsonData.correlation &&
-          <CorrelationHeatmap state={{ data: pearsonData.correlation, numericProperties: numericProperties }} />} */}
+        {pearsonData.correlation &&
+          <CorrelationHeatmap state={{ data: pearsonData.correlation, numericProperties: numericProperties }} />}
       </div>
       {data.clusters &&
         <Button onClick={() => saveResults()}>Save Results</Button>}

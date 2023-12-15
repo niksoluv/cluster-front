@@ -278,6 +278,7 @@ export default class MiniBatchKMeans {
       const results = {
         clusters: clusters,
         centroids: centroids,
+        numOfRecords: this.dataset.length,
         iterations: iterations,
         converged: iterations <= this.MAX_ITERATIONS,
       };

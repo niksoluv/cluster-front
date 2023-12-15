@@ -6,10 +6,12 @@ export const ResultsAPI = {
     const response = await api.post("/results/data", user)
     return response.data
   },
-  saveData: async (data, user) => {
+  saveData: async (data, fileName, user) => {
     const stringData = JSON.stringify(data)
     const response = await api.post("/results/saveData", {
-      data: stringData, user: user
+      data: stringData,
+      fileName: fileName,
+      user: user
     }, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
