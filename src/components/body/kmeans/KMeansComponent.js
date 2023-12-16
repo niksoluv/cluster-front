@@ -5,6 +5,7 @@ import ReactApexChart from "react-apexcharts";
 import { useDispatch } from "react-redux";
 import { setKMeansAction } from "../../../redux/reducers/resultsReducer";
 import { useEffect } from "react";
+import { Accordion } from "react-bootstrap";
 
 const KMeansComponent = (props) => {
   const data = props.state.data
@@ -20,7 +21,7 @@ const KMeansComponent = (props) => {
     cluster.centroid.fillColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`
   })
   console.log(data)
-  const clustersDataManager = new ClusterDataManager(data)
+  const clustersDataManager = new ClusterDataManager(data, selectedProperties)
   const clusterData = clustersDataManager.getData()
 
   const series = data.clusters.map((cluster, index) => {
@@ -85,9 +86,13 @@ const KMeansComponent = (props) => {
       <ReactApexChart options={options} series={series} type="scatter" height={350} />
       <Card.Body>
         <Card.Title>K Means Clustering results</Card.Title>
-        <Card.Text>
+        <Accordion defaultActiveKey="0">
           {clusterData}
-        </Card.Text>
+        </Accordion>
+
+        {/* <Card.Text>
+          {clusterData}
+        </Card.Text> */}
       </Card.Body>
     </Card>
   )

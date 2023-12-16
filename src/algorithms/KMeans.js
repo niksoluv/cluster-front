@@ -173,8 +173,8 @@ export default class KMeans {
     mean[this.selectedProps[0]] = 0
     mean[this.selectedProps[1]] = 0
     for (let i = start; i < end; i++) {
-      mean[this.selectedProps[0]] += mean[this.selectedProps[0]] + dataSet[i][this.selectedProps[0]] / n;
-      mean[this.selectedProps[1]] += mean[this.selectedProps[1]] + dataSet[i][this.selectedProps[1]] / n;
+      mean[this.selectedProps[0]] += (mean[this.selectedProps[0]] + dataSet[i][this.selectedProps[0]]) / n;
+      mean[this.selectedProps[1]] += (mean[this.selectedProps[1]] + dataSet[i][this.selectedProps[1]]) / n;
     }
     return mean;
   }

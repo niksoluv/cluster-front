@@ -98,7 +98,7 @@ export const ParseExcel = () => {
       res = kmeans.calculate(clustersNum, selectedProperties, true)
     }
     //const miniRes = miniBatchKmeans.calculate(clustersNum, selectedProperties, true)
-    const hclustRes = hclust.calculate(selectedProperties)
+    const hclustRes = hclust.calculate(selectedProperties, res.centroids)
     const pearsonsRes = pearson.calculate(selectedProperties, numericProperties)
     setData(res)
     //setMiniBatchData(miniRes)

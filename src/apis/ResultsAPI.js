@@ -33,7 +33,20 @@ export const ResultsAPI = {
     catch (err) {
       console.log(err)
     }
-  }
+  },
+  getHistoryById: async (id) => {
+    try {
+      const response = await api.get(`/results/history/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      return response.data
+    }
+    catch (err) {
+      console.log(err)
+    }
+  },
   // getInfo: async (cancel = false) => {
   //   try {
   //     const response = await api.get("/users/info", {

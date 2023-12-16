@@ -8,7 +8,6 @@ export const HistoryElement = (props) => {
 
   const dateCreated = new Date(data.created)
 
-  console.log(data)
   return <Card
     className="my-2"
     color="info"

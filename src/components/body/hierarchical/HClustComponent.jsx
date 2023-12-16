@@ -5,7 +5,7 @@ const HClustComponent = (props) => {
   
   return (
     <div style={{ width: '50%', height: '500px' }}>
-      <Tree data={data.dendogram} pathFunc='step' />
+      <Tree data={data.dendogram} pathFunc='diagonal' />
     </div>
   )
 }

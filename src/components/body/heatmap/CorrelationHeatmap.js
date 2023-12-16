@@ -23,31 +23,31 @@ const CorrelationHeatmap = (props) => {
             {
               from: -1,
               to: 0.3,
-              name:'very low',
+              name: 'very low',
               color: '#001f3f'
             },
             {
               from: 0.31,
               to: 0.5,
-              name:'low correlation',
+              name: 'low correlation',
               color: '#3D5A80'
             },
             {
               from: 0.51,
               to: 0.7,
-              name:'moderately correlated',
+              name: 'moderately correlated',
               color: '#A2A9B0'
             },
             {
               from: 0.71,
               to: 0.9,
-              name:'high',
+              name: 'high',
               color: '#F76D57'
             },
             {
               from: 0.91,
               to: 1,
-              name:'very high',
+              name: 'very high',
               color: '#D62828'
             },
           ]
@@ -69,12 +69,13 @@ const CorrelationHeatmap = (props) => {
     }
   };
   return (
-    <ReactApexChart
-      options={options}
-      series={series}
-      type="heatmap"
-      height="350"
-    />
+    <div style={{width:'50%'}}>
+      <ReactApexChart
+        options={options}
+        series={series}
+        type="heatmap"
+        height="350"
+      /></div>
   );
 };
 
