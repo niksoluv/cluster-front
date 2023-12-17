@@ -24,28 +24,30 @@ export const HistoryDetails = () => {
           console.log(res)
         }
         else {
-          res=JSON.parse(res.data)
+          res.data = JSON.parse(res.data)
           setData(res)
         }
       })
     }
   }, [id])
 
-  if(loading) {
+  if (loading) {
     return <div>Loading...</div>
   }
-  if(!loading&&data===undefined){
+  if (!loading && data === undefined) {
     return <div>Error occured</div>
   }
-  const kmeans = data?.kmeans
-  const hclust = data?.hclust
-  const pearson = data?.pearson
-  const selectedProperties = data?.selectedProperties
-  const numericProperties = data?.numericProperties
+  const kmeans = data?.data?.kmeans
+  const hclust = data?.data?.hclust
+  const pearson = data?.data?.pearson
+  const selectedProperties = data?.data?.selectedProperties
+  const numericProperties = data?.data?.numericProperties
+  const dateCreated = new Date(data.created)
 
   return (
     <Container>
-      <h1>filename: {data.fileName}</h1>
+      <h3>filename: {data.fileName}</h3>
+      <h5>{`Date Created: ${dateCreated.getDay() + 1}:${dateCreated.getMonth() + 1}:${dateCreated.getFullYear()}, ${dateCreated.getHours()}:${dateCreated.getMinutes()}`}</h5>
       <div style={{ display: 'flex' }}>
         {kmeans?.centroids &&
           <KMeansComponent state={{ data: kmeans, selectedProperties: selectedProperties }} />

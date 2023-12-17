@@ -27,6 +27,7 @@ function App() {
       <BrowserRouter>
         <Header />
         <Routes>
+          <Route path='/' element={<ParseExcel />} />
           <Route path='/login' element={<SignIn />} />
           <Route path='/register' element={<SignUp />} />
           <Route path='/parse-excel' element={<ParseExcel />} />
@@ -34,7 +35,6 @@ function App() {
           <Route path='/details' element={<HistoryDetails />} >
             <Route path=':id' element={<HistoryDetails />} />
           </Route>
-          <Route path='/' element={<Root />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />

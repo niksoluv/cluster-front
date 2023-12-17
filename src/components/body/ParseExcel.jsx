@@ -37,6 +37,9 @@ export const ParseExcel = () => {
   })
 
   const handleChange = async (e) => {
+    if(e.target.files.length<1){
+      return
+    }
     setFilename(e.target.files[0].name)
     const data = await fileReader.handleFile(e)
     setDataLength(data.length)
@@ -90,6 +93,10 @@ export const ParseExcel = () => {
   }
 
   const calculate = () => {
+    if(userData.id===undefined&&dataLength>100) {
+      toast.warning('To process data file with more than 100 rows you need to Sign In')
+      return
+    }
     let res = {};
     if (dataLength > 1000 || clustersNum > 5) {
       res = miniBatchKmeans.calculate(clustersNum, selectedProperties, true)
@@ -131,15 +138,15 @@ export const ParseExcel = () => {
   return (
     <Container>
       <h1>User Data Clusterization</h1>
-      <Form.Control type="file" onChange={(e) => handleChange(e)} />
-      <div className="input-group">
+      <Form.Control className="mb-1" type="file" onChange={(e) => handleChange(e)} />
+      <div className="input-group mb-1">
         <span className="input-group-text" id="basic-addon3">Number of clusters: </span>
         <input type="text" className="form-control" value={clustersNum}
           id="basic-url" aria-describedby="basic-addon3 basic-addon4"
           onChange={(e) => setClustersNum(e.target.value)} />
       </div>
       {numericPropertiesMarkup}
-      <Button onClick={() => calculate()} disabled={disabled}>Calculate</Button>
+      <Button className="mb-1" onClick={() => calculate()} disabled={disabled}>Calculate</Button>
       <div style={{ display: 'flex' }}>
         {data?.centroids &&
           <KMeansComponent state={{ data: data, selectedProperties: selectedProperties }} />
@@ -155,8 +162,8 @@ export const ParseExcel = () => {
         {pearsonData.correlation &&
           <CorrelationHeatmap state={{ data: pearsonData.correlation, numericProperties: numericProperties }} />}
       </div>
-      {data.clusters &&
-        <Button onClick={() => saveResults()}>Save Results</Button>}
+      {data.clusters && userData.id &&
+        <Button className="m-2" onClick={() => saveResults()}>Save Results</Button>}
     </Container >
   )
 }

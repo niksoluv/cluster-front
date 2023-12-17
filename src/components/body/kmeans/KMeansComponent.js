@@ -5,7 +5,9 @@ import ReactApexChart from "react-apexcharts";
 import { useDispatch } from "react-redux";
 import { setKMeansAction } from "../../../redux/reducers/resultsReducer";
 import { useEffect } from "react";
-import { Accordion } from "react-bootstrap";
+import { Accordion, Button } from "react-bootstrap";
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
 
 const KMeansComponent = (props) => {
   const data = props.state.data
@@ -23,11 +25,20 @@ const KMeansComponent = (props) => {
   console.log(data)
   const clustersDataManager = new ClusterDataManager(data, selectedProperties)
   const clusterData = clustersDataManager.getData()
-
+  let dataLength = 0
+  data.clusters.forEach(cluster => { dataLength += cluster.points.length })
   const series = data.clusters.map((cluster, index) => {
-    return {
-      name: `Cluster ${index + 1}`,
-      data: cluster.points.map(point => { return [point[selectedProperties[0]], point[selectedProperties[1]]] })
+    if (dataLength > 100) {
+      return {
+        name: `Cluster ${index + 1}`,
+        data: cluster.points.slice(0,(100/data.clusters.length).toFixed(0)).map(point => { return [point[selectedProperties[0]], point[selectedProperties[1]]] })
+      }
+    }
+    else {
+      return {
+        name: `Cluster ${index + 1}`,
+        data: cluster.points.map(point => { return [point[selectedProperties[0]], point[selectedProperties[1]]] })
+      }
     }
   })
 
@@ -60,39 +71,32 @@ const KMeansComponent = (props) => {
     }
   }
 
+  const saveData = (data) => {
+    var currentdate = new Date();
+    var datetime = "Last Sync: " + currentdate.getDate() + "/"
+      + (currentdate.getMonth() + 1) + "/"
+      + currentdate.getFullYear() + " "
+      + currentdate.getHours() + ":"
+      + currentdate.getMinutes()
+    const wb = XLSX.utils.book_new()
+    data.clusters.forEach((cluster, index) => {
+      const ws = XLSX.utils.json_to_sheet(cluster.points)
+      XLSX.utils.book_append_sheet(wb, ws, `Cluster ${index + 1}`)
+    })
+
+    var wopts = { bookType: "xlsx", bookSST: false, type: "array" };
+    var wbout = XLSX.write(wb, wopts)
+    saveAs(new Blob([wbout], { type: "application/octet-stream" }), `Cluster results_${datetime}.xlsx`);
+  }
+
   return (
     <Card className={styles.cardContainer}>
-      {/* <ResponsiveContainer height={400}>
-        <ScatterChart
-          margin={{
-            top: 20,
-            right: 20,
-            bottom: 20,
-            left: 20,
-          }}
-        >
-          <CartesianGrid />
-          <XAxis type="number" dataKey={selectedProperties[0]} name={'selectedProperties[0]'} />
-          <YAxis type="number" dataKey={selectedProperties[1]} name={'selectedProperties[1]'} />
-          <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-          {data.clusters.map((cluster, i) => {
-            return <Scatter isAnimationActive={false} name="A school" data={cluster.points} fill={data.centroids[i].fillColor} />
-          })}
-          {data.centroids.map((centroid) => {
-            return <Scatter name="A school1" data={[centroid]} fill="#FF0000" shape='diamond' />
-          })}
-        </ScatterChart>
-      </ResponsiveContainer> */}
       <ReactApexChart options={options} series={series} type="scatter" height={350} />
       <Card.Body>
-        <Card.Title>K Means Clustering results</Card.Title>
+        <Card.Title>K Means Clustering results <Button variant="outline-success" onClick={() => saveData(data)}>Export all data</Button></Card.Title>
         <Accordion defaultActiveKey="0">
           {clusterData}
         </Accordion>
-
-        {/* <Card.Text>
-          {clusterData}
-        </Card.Text> */}
       </Card.Body>
     </Card>
   )
